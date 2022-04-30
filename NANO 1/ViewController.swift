@@ -29,8 +29,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var noDataLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var balanceAmount: UILabel!
-    var balanceArr: [NSManagedObject] = []
-    
+    var balanceObj: [NSManagedObject] = []
+    var balanceArr: [Int] = []
     var cashFlowArr: [CashFlow] = []
     var cashFlowObj: [NSManagedObject] = []
     
@@ -51,11 +51,7 @@ class ViewController: UIViewController {
         numberFormatter.numberStyle = NumberFormatter.Style.currency
         let nib = UINib(nibName: "TableViewCell", bundle: nil)
 //        simpleCoreCashflow.delete(option: "all", attr: "", value: "") //RESET ALL DATA BALANCE
-        balanceArr = simpleCoreBalance.getData()
-        if balanceArr.count > 0 {
-            balanceAmount.text = numberFormatter.string(from: NSNumber(value: balanceArr[0].value(forKey: "value") as! Int))
-
-        }
+        balanceFetch()
         cashFlowFetch()
 
         if cashFlowArr.count == 0 {
@@ -157,8 +153,9 @@ class ViewController: UIViewController {
     }
     
     func balanceFetch(){
-        self.balanceArr = self.simpleCoreBalance.getData()
-        self.balanceAmount.text = self.numberFormatter.string(from: NSNumber(value: self.balanceArr[0].value(forKey: "value") as! Int))
+        balanceObj = simpleCoreBalance.getData()
+        balanceArr.append(balanceObj[0].value(forKey: "value") as! Int)
+        balanceAmount.text = numberFormatter.string(from: NSNumber(value: balanceArr[0]))
     }
     
     func cashFlowFetch(){
@@ -224,9 +221,7 @@ extension ViewController : AddViewControllerDelegate {
         
         DispatchQueue.main.async{
             self.cashFlowArr = []
-            self.balanceArr = []
             self.cashFlowFetch()
-            self.balanceFetch()
             self.noDataLabel.text = ""
             self.incomeTotal = 0
             self.spendingTotal = 0
@@ -240,8 +235,13 @@ extension ViewController : AddViewControllerDelegate {
             }
             self.incomeTotalLabel.text = self.numberFormatter.string(from: NSNumber(value: self.incomeTotal))
             self.spendingTotalLabel.text = self.numberFormatter.string(from: NSNumber(value: self.spendingTotal))
+
             self.tableView.performSelector(onMainThread: #selector(UICollectionView.reloadData), with: nil, waitUntilDone: true)
         }
+    }
+    
+    func refreshBalance(amount: Any) {
+        balanceAmount.text = numberFormatter.string(from: amount as! NSNumber)
     }
 }
 

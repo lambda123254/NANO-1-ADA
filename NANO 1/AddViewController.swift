@@ -11,6 +11,7 @@ import SimpleCore
 
 protocol AddViewControllerDelegate: AnyObject {
     func refreshTable()
+    func refreshBalance(amount: Any)
 }
 
 class AddViewController: UIViewController {
@@ -28,7 +29,7 @@ class AddViewController: UIViewController {
     var typeArr: [String] = ["income", "spending"]
     let simpleCoreCashflow = SimpleCore(entity: "Cashflow", coreData: "NANO_1")
 
-    
+    var amountUpdated: Any?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -58,6 +59,8 @@ class AddViewController: UIViewController {
 
         updateBalance(amount: NumberFormatter().number(from: amountTextField.text!) as! Int)
         saveCashflow(amount: Int(amountTextField.text!)!, type: typeTextField.text!, item: itemTextField.text!, date: dateField.date)
+        delegate?.refreshBalance(amount: amountUpdated!)
+
         
     }
     func saveCashflow(amount: Int, type: String, item: String, date: Date){
@@ -87,8 +90,8 @@ class AddViewController: UIViewController {
             }
 
             objUpdate.setValue(NSNumber(value: amountAfter!), forKey: "value")
-            print(objUpdate.value(forKey: "value")!)
-
+//            print(objUpdate.value(forKey: "value")!)
+            amountUpdated = objUpdate.value(forKey: "value")!
             
         } catch {
             
