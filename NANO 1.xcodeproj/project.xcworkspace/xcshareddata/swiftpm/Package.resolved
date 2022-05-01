@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "simplecore",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lambda123254/SimpleCore.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "0036553aa56f6ddf21598513a380d17120501ba8"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -10,6 +10,7 @@ import CoreData
 import SimpleCore
 
 struct CashFlow {
+    let id: String
     let item: String
     let amount: Int
     let type: String
@@ -49,7 +50,9 @@ class ViewController: UIViewController {
         numberFormatter.locale = Locale(identifier: "id_ID")
         numberFormatter.numberStyle = NumberFormatter.Style.currency
         let nib = UINib(nibName: "TableViewCell", bundle: nil)
-//        simpleCoreCashflow.delete(option: "all", attr: "", value: "") //RESET ALL DATA BALANCE
+//        simpleCoreCashflow.delete(option: "all", attr: "", value: "") //RESET ALL DATA CASHFLOW
+//        simpleCoreBalance.delete(option: "all", attr: "", value: "") //RESET ALL DATA BALANCE
+
         balanceFetch()
         cashFlowFetch()
         if cashFlowArr.count == 0 {
@@ -152,14 +155,16 @@ class ViewController: UIViewController {
     
     func balanceFetch(){
         balanceObj = simpleCoreBalance.getData()
-        balanceArr.append(balanceObj[0].value(forKey: "value") as! Int)
-        balanceAmount.text = numberFormatter.string(from: NSNumber(value: balanceArr[0]))
+        if balanceObj.count > 0 {
+            balanceArr.append(balanceObj[0].value(forKey: "value") as! Int)
+            balanceAmount.text = numberFormatter.string(from: NSNumber(value: balanceArr[0]))
+        }
     }
     
     func cashFlowFetch(){
         cashFlowObj = simpleCoreCashflow.getData()
         for i in 0 ..< cashFlowObj.count {
-            cashFlowArr.append(CashFlow(item: cashFlowObj[i].value(forKey: "title") as! String, amount: cashFlowObj[i].value(forKey: "value") as! Int, type: cashFlowObj[i].value(forKey: "type") as! String, date: cashFlowObj[i].value(forKey: "date") as! Date))
+            cashFlowArr.append(CashFlow(id: cashFlowObj[i].value(forKey: "cashflow_id") as! String, item: cashFlowObj[i].value(forKey: "title") as! String, amount: cashFlowObj[i].value(forKey: "value") as! Int, type: cashFlowObj[i].value(forKey: "type") as! String, date: cashFlowObj[i].value(forKey: "date") as! Date))
         }
     }
     func updateCalculation(){
@@ -212,6 +217,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let timeString = dfTime.string(from: cashFlowArr[indexPath.row].date)
         let type = cashFlowArr[indexPath.row].type
         cell.titleLabel.text = cashFlowArr[indexPath.row].item
+        cell.uuidLabel.text = String(describing: cashFlowArr[indexPath.row].id)
         cell.contentLabel.text = dateString
         cell.contentLabelTwo.text = timeString
         
@@ -228,7 +234,8 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as? TableViewCell
         if editingStyle == .delete {
-            simpleCoreCashflow.delete(option: "single", attr: "title", value: cell!.titleLabel.text!)
+            simpleCoreCashflow.delete(option: "single", attr: "cashflow_id", value: cell!.uuidLabel.text!)
+            print(cell!.uuidLabel.text!)
             cashFlowArr.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             updateCalculation()

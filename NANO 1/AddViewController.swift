@@ -63,7 +63,7 @@ class AddViewController: UIViewController {
         
     }
     func saveCashflow(amount: Int, type: String, item: String, date: Date){
-        simpleCoreCashflow.insert(into: "value,type,title,date", value: "\(amount),\(type),\(item),\(date)")
+        simpleCoreCashflow.insert(into: "value,type,title,date,cashflow_id", value: "\(amount),\(type),\(item),\(date),\(UUID())")
     }
     
     func updateBalance(amount: Int){

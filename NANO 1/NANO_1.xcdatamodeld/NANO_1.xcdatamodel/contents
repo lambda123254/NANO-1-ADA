@@ -4,6 +4,7 @@
         <attribute name="value" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="Cashflow" representedClassName="Cashflow" syncable="YES" codeGenerationType="class">
+        <attribute name="cashflow_id" optional="YES" attributeType="String"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="time" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>
@@ -12,6 +13,6 @@
     </entity>
     <elements>
         <element name="Balance" positionX="-63" positionY="-18" width="128" height="44"/>
-        <element name="Cashflow" positionX="-54" positionY="-9" width="128" height="104"/>
+        <element name="Cashflow" positionX="-54" positionY="-9" width="128" height="119"/>
     </elements>
 </model>
